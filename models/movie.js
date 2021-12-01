@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator')
+const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -26,24 +26,24 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: value => validator.isURL(value, { protocols: ['http','https','ftp'], require_tld: true, require_protocol: true }),
-      message: 'Переданы некорректные данные'
+      validator: (value) => validator.isURL(value, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true }),
+      message: 'Переданы некорректные данные',
     },
   },
   trailer: {
     type: String,
     required: true,
     validate: {
-      validator: value => validator.isURL(value, { protocols: ['http','https','ftp'], require_tld: true, require_protocol: true }),
-      message: 'Переданы некорректные данные'
+      validator: (value) => validator.isURL(value, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true }),
+      message: 'Переданы некорректные данные',
     },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator: value => validator.isURL(value, { protocols: ['http','https','ftp'], require_tld: true, require_protocol: true }),
-      message: 'Переданы некорректные данные'
+      validator: (value) => validator.isURL(value, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true }),
+      message: 'Переданы некорректные данные',
     },
   },
   owner: {

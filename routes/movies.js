@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const { getMovies, createMovie, deleteMovie } = require('../controllers/movies');
-const validator = require('validator')
 
 router.get('/movies', getMovies);
 
@@ -16,19 +16,19 @@ router.post('/movies', celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Поле image заполнено некорректно')
+      return helpers.message('Поле image заполнено некорректно');
     }),
     trailer: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Поле trailer заполнено некорректно')
+      return helpers.message('Поле trailer заполнено некорректно');
     }),
     thumbnail: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Поле thumbnail заполнено некорректно')
+      return helpers.message('Поле thumbnail заполнено некорректно');
     }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),

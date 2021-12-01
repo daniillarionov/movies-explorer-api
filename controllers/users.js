@@ -33,7 +33,7 @@ const getUser = (req, res, next) => {
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-        next(err);
+      next(err);
     });
 };
 

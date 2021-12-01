@@ -56,9 +56,8 @@ const deleteMovie = (req, res, next) => {
       if (movie.owner.equals(req.user._id)) {
         return movie.delete()
           .then(() => res.status(200).send(movie));
-      } else {
-        next(new ForbiddenError('Удалить фильм может только его владелец'));
       }
+      return next(new ForbiddenError('Удалить фильм может только его владелец'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
