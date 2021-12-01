@@ -7,12 +7,13 @@ const errorHandler = require('./middlewares/errorhandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const AllRoutes = require('./routes/index');
 const apiLimiter = require('./middlewares/ratelimit');
+const { NODE_ENV, MONGO_URL } = process.env;
 
 const PORT = 3000;
 const app = express();
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/moviesdb', {
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://localhost:27017/moviesdb', {
   useNewUrlParser: true,
 });
 

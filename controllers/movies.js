@@ -51,10 +51,10 @@ const createMovie = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   return Movie.findById(movieId)
-    .orFail(new Error('Not valid id'))
+    .orFail(new NotFoundError('Фильм с указанным _id не найден'))
     .then((movie) => {
       if (movie.owner.equals(req.user._id)) {
-        movie.delete()
+        return movie.delete()
           .then(() => res.status(200).send(movie));
       } else {
         next(new ForbiddenError('Удалить фильм может только его владелец'));
@@ -63,9 +63,6 @@ const deleteMovie = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Невалидный id'));
-      }
-      if (err.message === 'Not valid id') {
-        next(new NotFoundError('Фильм с указанным _id не найден'));
       } else {
         next(err);
       }

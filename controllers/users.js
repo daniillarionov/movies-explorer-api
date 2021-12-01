@@ -5,6 +5,7 @@ const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictRequestError = require('../errors/conflict-request-err');
 const UnauthorizedError = require('../errors/unauth-err.');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
@@ -29,17 +30,10 @@ const login = (req, res, next) => {
 const getUser = (req, res, next) => {
   const userId = req.res.req.user._id;
   return User.findById(userId)
-    .orFail(new Error('Not valid id'))
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Невалидный id'));
-      }
-      if (err.message === 'Not valid id') {
-        next(new NotFoundError('Пользователь по указанному _id не найден'));
-      } else {
         next(err);
-      }
     });
 };
 
@@ -61,9 +55,8 @@ const createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
-          }
-          if (err.name === 'MongoServerError' && err.code === 11000) {
-            next(new ConflictRequestError('Переданы некорректные данные при создании пользователя'));
+          } else if (err.code === 11000) {
+            next(new ConflictRequestError('Пользователь с такими данными уже существует'));
           } else {
             next(err);
           }
@@ -78,14 +71,14 @@ const updateUser = (req, res, next) => {
     { name, email },
     { new: true, runValidators: true },
   )
-    .orFail(new Error('Not valid id'))
+    .orFail(new NotFoundError('Пользователь с указанным _id не найден'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
       }
-      if (err.message === 'Not valid id') {
-        next(new NotFoundError('Пользователь с указанным _id не найден'));
+      if (err.code === 11000) {
+        next(new ConflictRequestError('Пользователь с такими данными уже существует'));
       } else {
         next(err);
       }
